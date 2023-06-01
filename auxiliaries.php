@@ -1,5 +1,15 @@
 <?php
 
+
+// START SESSION IF NOT STARTED
+function startSession(): void
+{
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+}
+
+
 // FUNCTION TO REDIRECT TO ERROR PAGE ON SYSTEM ERROR
 function systemError(string $message): void
 {
@@ -11,6 +21,8 @@ function systemError(string $message): void
 // SET ERROR MESSAGE IN SESSION
 function setError($message, $exit = false)
 {
+    startSession(); 
+
     $_SESSION['error'] = $message ;
     header('Location: ../error.php');
 
@@ -25,6 +37,8 @@ function setSuccess($message, $options = [
     'exit' => false
 ])
 {
+    startSession();
+    
     $_SESSION['success'] = $message;
     if ($options['redirect'] !== null) {
         header("Location: ../{$options['redirect']}");
@@ -33,6 +47,7 @@ function setSuccess($message, $options = [
         exit;
     }
 }
+
 
 // FUNCTION TO READ ERROR MESSAGE FROM SESSION
 function readError(): string
@@ -79,6 +94,14 @@ function deleteExpense(PDO $conn, int $id): bool
 
 }
 
+// CREATE EXPENSE
+function createExpense(PDO $conn, array $expense): bool
+{
+    $createExpense = "INSERT INTO expenses (amount, date, description, category) VALUES (?, ?, ?, ?)";
+    $stmt = $conn->prepare($createExpense);
+    return $stmt->execute($expense);
+}
+
 
 // ACTIVATE LINK IN SIDEBAR
 function activateLink($view, $link)
@@ -88,4 +111,14 @@ function activateLink($view, $link)
     } else {
         echo 'text-white';
     }
+
+}
+
+// Sanitize input
+function sanitizeInput($data)
+{
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
 }
