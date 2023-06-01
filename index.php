@@ -30,6 +30,7 @@ $view = $_GET['view'] ?? 'overview';
                 'overview' => require_once 'includes/overview.php',
                 'expenses' => require_once 'includes/expenses.php',
                 'addexpense' => require_once 'includes/addexpense.php',
+                'edit' => require_once 'includes/edit.php',
                 default => require_once 'includes/overview.php',
             };
             ?>

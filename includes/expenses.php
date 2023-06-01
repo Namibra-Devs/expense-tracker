@@ -6,7 +6,7 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
 ?>
 
 
-<div class="mb-3 border-bottom d-flex align-items-center justify-content-between" >
+<div class="mb-3 border-bottom d-flex align-items-center justify-content-between">
     <h1>Expenses</h1>
     <a href="?view=addexpense" class="btn btn-primary"> Add Expense</a>
 </div>
@@ -65,7 +65,7 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
                         <td> <?= $expense['description'] ?></td>
                         <td> <?= $expense['category'] ?></td>
                         <td>
-                            <a href="#" class="btn btn-primary">Edit</a>
+                            <a href="?view=edit&exp=<?= $expense['id'] ?>" class="btn btn-primary">Edit</a>
                             <button class="btn btn-primary delBtn" data-expenseId="<?= $expense['id'] ?>">Delete</button>
                         </td>
                     </tr>
@@ -75,7 +75,7 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
                 ?>
                 <tr>
                     <td colspan="5" class="text-center text-secondary p-3">No expenses found
-                        <a href="?view=addexpense" > Add Expense</a>
+                        <a href="?view=addexpense"> Add Expense</a>
                     </td>
                 </tr>
             <?php
@@ -83,6 +83,18 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
             ?>
         </tbody>
     </table>
+
+    <!-- Total expense -->
+    <div>
+        <?php
+        // CALCULATE ALL EXPENSES
+        $total = 0;
+        foreach ($expenses as $expense) {
+            $total += $expense['amount'];
+        }
+        ?>
+        <h3> Total Expense: GHS <?= $total ?> </h3>
+    </div>
 
     <div id="modal"></div>
     <script type="module" src="../src/js/expenses.js"></script>
