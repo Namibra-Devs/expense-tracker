@@ -19,14 +19,20 @@ function systemError(string $message): void
 }
 
 // SET ERROR MESSAGE IN SESSION
-function setError($message, $exit = false)
+function setError($message, $options = [
+    'redirect' => false,
+    'exit' => false
+])
 {
     startSession(); 
 
     $_SESSION['error'] = $message ;
-    header('Location: ../error.php');
+    
+    if(['redirect'] !== false) {
+        header("Location: ../{$options['redirect']}");
+    }
 
-    if ($exit) {
+    if ($options =['exit']) {
         exit;
     }
 }
@@ -77,6 +83,15 @@ function getExpenses(PDO $conn, bool $refresh = false): array
     }
 
     return $cachedExpenses;
+}
+
+/// GET ONE EXPENSE
+function getExpense(PDO $conn, int $id): array
+{
+    $getExpense = "SELECT * FROM expenses WHERE id = ?";
+    $stmt = $conn->prepare($getExpense);
+    $stmt->execute([$id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
 /**

@@ -65,7 +65,7 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
                         <td> <?= $expense['description'] ?></td>
                         <td> <?= $expense['category'] ?></td>
                         <td>
-                            <a href="#" class="btn btn-primary">Edit</a>
+                            <a href="?view=edit&exp=<?= $expense['id'] ?>" class="btn btn-primary">Edit</a>
                             <button class="btn btn-primary delBtn" data-expenseId="<?= $expense['id'] ?>">Delete</button>
                         </td>
                     </tr>
