@@ -1,0 +1,52 @@
+// color array
+$blue: #007bff;
+$indigo: #6610f2;
+$purple: #6f42c1;
+$pink: #e83e8c;
+$red: #dc3545;
+$orange: #fd7e14;
+$yellow: #ffc107;
+$green: #28a745;
+$teal: #20c997;
+$cyan: #17a2b8;
+$white: #fff;
+$gray: #6c757d;
+$dark: #343a40;
+
+// color map
+$colors: (
+	"blue": $blue,
+	"indigo": $indigo,
+	"purple": $purple,
+	"pink": $pink,
+	"red": $red,
+	"orange": $orange,
+	"yellow": $yellow,
+	"green": $green,
+	"teal": $teal,
+	"cyan": $cyan,
+	"white": $white,
+	"gray": $gray,
+	"dark": $dark,
+);
+
+// color function
+@function color($color: "blue") {
+	@return map-get($colors, $color);
+}
+
+// text color
+$text-color: #212529;
+
+// body background color
+$body-bg: #f3f1f1;
+
+@mixin marginCenter($maxWidth, $space) {
+	width: min($maxWidth, 100% - $space);
+	margin-inline: auto;
+}
+
+@mixin gridCenter {
+	display: grid;
+	place-items: center;
+}

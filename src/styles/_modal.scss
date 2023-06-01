@@ -1,0 +1,45 @@
+#modal {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: 100%;
+	padding: 1rem;
+	background-color: #0006;
+	z-index: 1000;
+
+	.card{
+		animation: slide-in-right 0.50s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+	}
+	.modal-box {
+		position: relative;
+		@include marginCenter(500px, 2rem);
+		// @extend .round-s,.flex-column,.justify-content-center,.align-center;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		background-color: color("white");
+		min-height: 300px;
+	}
+
+	#close-modal {
+		position: absolute;
+		@include gridCenter();
+		width: 50px;
+		height: 50px;
+		top: 20px;
+		right: 20px;
+		cursor: pointer;
+		opacity: 0.6;
+
+		&:hover {
+			opacity: 1;
+		}
+	}
+
+	&.show {
+		@include gridCenter();
+	}
+}
