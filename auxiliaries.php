@@ -117,6 +117,14 @@ function createExpense(PDO $conn, array $expense): bool
     return $stmt->execute($expense);
 }
 
+// UPDATE EXPENSE
+function updateExpense(PDO $conn, array $expense): bool
+{
+    $updateExpense = "UPDATE expenses SET amount = ?, date = ?, description = ?, category = ? WHERE id = ?";
+    $stmt = $conn->prepare($updateExpense);
+    return $stmt->execute($expense);
+}
+
 
 // ACTIVATE LINK IN SIDEBAR
 function activateLink($view, $link)

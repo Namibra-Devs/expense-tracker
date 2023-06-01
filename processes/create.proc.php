@@ -3,7 +3,7 @@
 require_once '../auxiliaries.php';
 require_once '../config.php';
 
-if (isset($_POST['submit'])) {
+if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
 
     foreach ($_POST as $key => $value) {
         if (empty($_POST[$key])) {
@@ -22,7 +22,7 @@ if (isset($_POST['submit'])) {
             if (strlen($_POST[$key]) > 15) {
                 setError('Description must be less than 15 characters', true);
             }
-            }
+        }
 
         if ($key == 'date') {
             if ($_POST[$key] > date('Y-m-d')) {

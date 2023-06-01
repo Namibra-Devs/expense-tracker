@@ -9,7 +9,7 @@
                     <label for="amount" class="form-label">Amount</label>
                     <div class="input-group">
                         <span class="input-group-text">GHS</span>
-                        <input type="number" class="form-control" id="amount" name="amount" required>
+                        <input type="number" class="form-control" id="amount" name="amount" placeholder="200.00" required>
                     </div>
                 </div>
                 <div class="col">
@@ -35,15 +35,15 @@
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
-                <input type="text" class="form-control" id="description" name="description" required>
-                <small id="descriptionHelp" class="form-text text-muted">A short description of the expense. eg. "New shoes"  <br>
+                <input type="text" class="form-control" id="description" name="description" placeholder="A short description of the expense. eg. 'New shoes' " required>
+                <small id="descriptionHelp" class="form-text text-muted"> 
                     <span class="text-danger">Max 15 characters</span>
                 </small>
                 <div class="text-muted" style="font-size: 12px;" >
                     <span id="description-count">0</span>/15
                 </div>
             </div>
-            <button type="submit" name="submit"  class="btn btn-primary">Submit</button>
+            <button type="submit" name="submit"  class="btn btn-primary w-100">Submit</button>
         </form>
 
     </div>
