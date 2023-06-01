@@ -2,14 +2,15 @@
 require_once 'auxiliaries.php';
 require_once 'config.php';
 
-$expenses = getExpenses($conn);
-
+$expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
 ?>
 
 
-<div class="mb-3 border-bottom">
+<div class="mb-3 border-bottom d-flex align-items-center justify-content-between" >
     <h1>Expenses</h1>
+    <a href="#" class="btn btn-primary"> Add Expense</a>
 </div>
+<!-- <a href="../processes/delete.proc.php">Click</a> -->
 <div class="container">
     <div class="row mb-3">
         <div class="col-12">
@@ -44,7 +45,7 @@ $expenses = getExpenses($conn);
             </form>
         </div>
     </div>
-    <table class="table">
+    <table class="table table-hover">
         <thead>
             <tr>
                 <th scope="col">Amount</th>
@@ -61,12 +62,12 @@ $expenses = getExpenses($conn);
             ?>
                     <tr>
                         <td>GHS <?= $expense['amount'] ?></td>
-                        <td>GHS <?= $expense['date'] ?></td>
-                        <td>GHS <?= $expense['description'] ?></td>
-                        <td>GHS <?= $expense['category'] ?></td>
+                        <td> <?= $expense['date'] ?></td>
+                        <td> <?= $expense['description'] ?></td>
+                        <td> <?= $expense['category'] ?></td>
                         <td>
                             <a href="#" class="btn btn-primary">Edit</a>
-                            <button class="btn btn-danger delBtn" data-expId="<?= $expense['id'] ?>" >Delete</button>
+                            <button class="btn btn-primary delBtn" data-expenseId="<?= $expense['id'] ?>">Delete</button>
                         </td>
                     </tr>
                 <?php
@@ -74,7 +75,9 @@ $expenses = getExpenses($conn);
             else :
                 ?>
                 <tr>
-                    <td colspan="5">No expenses found</td>
+                    <td colspan="5" class="text-center text-secondary p-3">No expenses found
+                        <a href="#" > Add Expense</a>
+                    </td>
                 </tr>
             <?php
             endif;
@@ -82,17 +85,24 @@ $expenses = getExpenses($conn);
         </tbody>
     </table>
 
+    <div id="modal"></div>
+    <script type="module" src="../src/js/expenses.js"></script>
 
-    <script type="module" >
-        import Alert from '/src/js/Alert.js';
-
-        const delBtns = document.querySelectorAll('.delBtn');
-        delBtns.forEach(btn => {
-            btn.addEventListener('click', (e)=>{
-                console.log(e.target.dataset.expId);
-            })
-        })
-
-
-    </script>
 </div>
+
+<?php
+// SHOW  SUCCESS MESSAGE
+if (isset($_SESSION['success'])) :
+?>
+    <div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 mt-4 end-0 mx-4 " role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <?= $_SESSION['success'] ?>
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+<?php
+    unset($_SESSION['success']);
+endif;
+?>
