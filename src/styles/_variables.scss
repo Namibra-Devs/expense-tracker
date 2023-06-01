@@ -50,3 +50,8 @@ $body-bg: #f3f1f1;
 	display: grid;
 	place-items: center;
 }
+
+@mixin responsiveWidth($maxWidth) {
+    width: 100%;
+    max-width: $maxWidth;
+}

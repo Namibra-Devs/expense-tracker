@@ -8,9 +8,8 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
 
 <div class="mb-3 border-bottom d-flex align-items-center justify-content-between" >
     <h1>Expenses</h1>
-    <a href="#" class="btn btn-primary"> Add Expense</a>
+    <a href="?view=addexpense" class="btn btn-primary"> Add Expense</a>
 </div>
-<!-- <a href="../processes/delete.proc.php">Click</a> -->
 <div class="container">
     <div class="row mb-3">
         <div class="col-12">
@@ -76,7 +75,7 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
                 ?>
                 <tr>
                     <td colspan="5" class="text-center text-secondary p-3">No expenses found
-                        <a href="#" > Add Expense</a>
+                        <a href="?view=addexpense" > Add Expense</a>
                     </td>
                 </tr>
             <?php
