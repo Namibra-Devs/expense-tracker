@@ -8,10 +8,36 @@ function systemError(string $message): void
     header('Location: error.php');
 }
 
+// SET ERROR MESSAGE IN SESSION
+function setError($message, $exit = false)
+{
+    $_SESSION['error'] = $message ;
+    header('Location: ../error.php');
+
+    if ($exit) {
+        exit;
+    }
+}
+
+// SET SUCCESS MESSAGE IN SESSION
+function setSuccess($message, $options = [
+    'redirect' => null,
+    'exit' => false
+])
+{
+    $_SESSION['success'] = $message;
+    if ($options['redirect'] !== null) {
+        header("Location: ../{$options['redirect']}");
+    }
+    if($options['exit']) {
+        exit;
+    }
+}
+
 // FUNCTION TO READ ERROR MESSAGE FROM SESSION
 function readError(): string
 {
-    $error = $_SESSION['error'];
+    $error = $_SESSION['error'] ?? 'Something went wrong';
     unset($_SESSION['error']);
 
     return $error;
@@ -43,13 +69,14 @@ function getExpenses(PDO $conn, bool $refresh = false): array
  * 
  * @param PDO $conn DATABASE CONNECTION
  * @param int $id USER ID
- * @return PDOStatement|bool PDO STATEMENT OR FALSE
+ * @return bool `TRUE` IF SUCCESSFUL OR `FALSE` IF NOT
  */
-function deleteExpense(PDO $conn, int $id): PDOStatement | bool
+function deleteExpense(PDO $conn, int $id): bool
 {
     $deleteExpense = "DELETE FROM expenses WHERE id = ?";
     $stmt = $conn->prepare($deleteExpense);
     return $stmt->execute([$id]);
+
 }
 
 
