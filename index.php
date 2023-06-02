@@ -22,9 +22,9 @@ $view = $_GET['view'] ?? 'overview';
 </head>
 
 <body>
-    <div class="d-flex h-100 ">
+    <div class="d-flex h-100 position-fixed top-0 end-0 w-100">
         <?php require_once 'includes/sidebar.php' ?>
-        <main class="w-100 h-100 p-4">
+        <main class="w-100 h-100 p-4 overflow-auto">
             <?php
 
             match ($view) {
@@ -35,7 +35,7 @@ $view = $_GET['view'] ?? 'overview';
                 default => require_once 'includes/overview.php',
             };
             ?>
-            <p class="text-center text-secondary mt-5" style="opacity: 0.5">Made by <a href="https://github.com/bensonOSei" target="_blank"  class="text-decoration-none text-secondary">Benson</a></p>
+            <p class="text-center text-secondary mt-5" style="opacity: 0.5">Made by <a href="https://github.com/bensonOSei" target="_blank" class="text-decoration-none text-secondary">Benson</a></p>
         </main>
 
     </div>
@@ -45,6 +45,11 @@ $view = $_GET['view'] ?? 'overview';
         var toastElList = [].slice.call(document.querySelectorAll('.toast'))
         var toastList = toastElList.map(function(toastEl) {
             return new bootstrap.Toast(toastEl).show()
+        })
+        
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
         })
     </script>
 

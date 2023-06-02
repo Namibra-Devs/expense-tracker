@@ -193,6 +193,7 @@ function calculateMonthAverageExpenses($conn): float
     return $avgExpenses;
 }
 
+
 function calculateTotalExpensesByMonth(PDO $conn): array
 {
     $totalExpensesByMonth = array_fill(1, 12, 0);
@@ -205,6 +206,35 @@ function calculateTotalExpensesByMonth(PDO $conn): array
     return $totalExpensesByMonth;
 }
 
+function getTotalExpensesForCurrentYear(PDO $conn): float
+{
+    static $memoizedResult = null;
+
+    if ($memoizedResult !== null) {
+        return $memoizedResult;
+    }
+
+    $totalAmount = 0;
+    $totalCount = 0;
+    $avgExpenses = 0;
+
+    $currentYear = date('Y');
+    
+    $expenses = getExpenses($conn);
+    foreach ($expenses as $expense) {
+        $expenseDate = date('Y', strtotime($expense['date']));
+
+        if ($expenseDate === $currentYear) {
+            $totalAmount += $expense['amount'];
+            $totalCount++;
+        }
+    }
+
+
+    $memoizedResult = $totalAmount;
+
+    return $totalAmount;
+}
 
 // ACTIVATE LINK IN SIDEBAR
 function activateLink($view, $link)
