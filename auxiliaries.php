@@ -73,16 +73,14 @@ function readError(): string
 */
 function getExpenses(PDO $conn, bool $refresh = false): array
 {
-    static $cachedExpenses = null;
 
-    if ($cachedExpenses === null || $refresh) {
         $getAllExpenses = "SELECT * FROM expenses";
         $stmt = $conn->prepare($getAllExpenses);
         $stmt->execute(/*[$id] */);
-        $cachedExpenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    return $cachedExpenses;
+
+    return $result;
 }
 
 
@@ -90,18 +88,12 @@ function getExpenses(PDO $conn, bool $refresh = false): array
 // GET ONE EXPENSE
 function getExpense(PDO $conn, int $id): array | false
 {
-    static $cachedExpense = null;
-
-    if ($cachedExpense !== null) {
-        return $cachedExpense;
-    }
 
     $getExpense = "SELECT * FROM expenses WHERE id = ?";
     $stmt = $conn->prepare($getExpense);
     $stmt->execute([$id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    $cachedExpense = $result;
     return $result;
 }
 
@@ -138,12 +130,6 @@ function updateExpense(PDO $conn, array $expense): bool
 // GET TOTAL EXPENSES FOR CURRENT MONTH
 function getTotalExpensesForCurrentMonth($conn)
 {
-    static $memoizedResult = null;
-
-    if ($memoizedResult !== null) {
-        // RETURN THE RESULT IF IT HAS ALREADY BEEN CALCULATED
-        return $memoizedResult;
-    }
 
     // PREPARE QUERY TO GET TOTAL EXPENSES FOR CURRENT MONTH
     $getTotalExpForMonth = "SELECT SUM(amount) AS total_expenses FROM expenses WHERE DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')";
@@ -156,10 +142,21 @@ function getTotalExpensesForCurrentMonth($conn)
     // GET THE TOTAL EXPENSES FROM THE RESULT
     $totalExpenses = $result['total_expenses'];
 
-    // STORE THE RESULT IN THE STATIC VARIABLE
-    $memoizedResult = $totalExpenses;
-
     return $totalExpenses;
+}
+
+function calculateAllExpenses(PDO $conn): float
+{
+ 
+    $totalAmount = 0;
+
+    $expenses = getExpenses($conn);
+    foreach ($expenses as $expense) {
+        $totalAmount += $expense['amount'];
+    }
+
+
+    return $totalAmount;
 }
 
 

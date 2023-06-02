@@ -46,7 +46,7 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
         </div>
     </div>
     <table class="table table-light table-borderless table-responsive border rounded">
-        <thead class="table-dark">
+        <thead class="table-primary">
             <tr>
                 <th class="p-3" scope="col">Amount</th>
                 <th class="p-3" scope="col">Date</th>
