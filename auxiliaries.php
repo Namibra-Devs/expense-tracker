@@ -85,13 +85,24 @@ function getExpenses(PDO $conn, bool $refresh = false): array
     return $cachedExpenses;
 }
 
-/// GET ONE EXPENSE
-function getExpense(PDO $conn, int $id): array
+
+
+// GET ONE EXPENSE
+function getExpense(PDO $conn, int $id): array | false
 {
+    static $cachedExpense = null;
+
+    if ($cachedExpense !== null) {
+        return $cachedExpense;
+    }
+
     $getExpense = "SELECT * FROM expenses WHERE id = ?";
     $stmt = $conn->prepare($getExpense);
     $stmt->execute([$id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $cachedExpense = $result;
+    return $result;
 }
 
 /**
@@ -106,7 +117,6 @@ function deleteExpense(PDO $conn, int $id): bool
     $deleteExpense = "DELETE FROM expenses WHERE id = ?";
     $stmt = $conn->prepare($deleteExpense);
     return $stmt->execute([$id]);
-
 }
 
 // CREATE EXPENSE
@@ -125,6 +135,79 @@ function updateExpense(PDO $conn, array $expense): bool
     return $stmt->execute($expense);
 }
 
+// GET TOTAL EXPENSES FOR CURRENT MONTH
+function getTotalExpensesForCurrentMonth($conn)
+{
+    static $memoizedResult = null;
+
+    if ($memoizedResult !== null) {
+        // RETURN THE RESULT IF IT HAS ALREADY BEEN CALCULATED
+        return $memoizedResult;
+    }
+
+    // PREPARE QUERY TO GET TOTAL EXPENSES FOR CURRENT MONTH
+    $getTotalExpForMonth = "SELECT SUM(amount) AS total_expenses FROM expenses WHERE DATE_FORMAT(date, '%Y-%m') = DATE_FORMAT(NOW(), '%Y-%m')";
+    $stmt = $conn->prepare($getTotalExpForMonth);
+    $stmt->execute();
+
+    // FETCH THE RESULT
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // GET THE TOTAL EXPENSES FROM THE RESULT
+    $totalExpenses = $result['total_expenses'];
+
+    // STORE THE RESULT IN THE STATIC VARIABLE
+    $memoizedResult = $totalExpenses;
+
+    return $totalExpenses;
+}
+
+
+function calculateMonthAverageExpenses($conn): float
+{
+    static $memoizedResult = null;
+
+    if ($memoizedResult !== null) {
+        return $memoizedResult;
+    }
+
+    $totalAmount = 0;
+    $totalCount = 0;
+    $avgExpenses = 0;
+
+    $currentMonth = date('Y-m');
+    
+    $expenses = getExpenses($conn);
+    foreach ($expenses as $expense) {
+        $expenseDate = date('Y-m', strtotime($expense['date']));
+
+        if ($expenseDate === $currentMonth) {
+            $totalAmount += $expense['amount'];
+            $totalCount++;
+        }
+    }
+
+    if ($totalCount > 0) {
+        $avgExpenses = $totalAmount / $totalCount;
+    }
+
+    $memoizedResult = $avgExpenses;
+
+    return $avgExpenses;
+}
+
+function calculateTotalExpensesByMonth(PDO $conn): array
+{
+    $totalExpensesByMonth = array_fill(1, 12, 0);
+    $expenses = getExpenses($conn);
+    foreach ($expenses as $expense) {
+        $expenseDate = date('n', strtotime($expense['date']));
+        $totalExpensesByMonth[$expenseDate] += $expense['amount'];
+    }
+
+    return $totalExpensesByMonth;
+}
+
 
 // ACTIVATE LINK IN SIDEBAR
 function activateLink($view, $link)
@@ -137,11 +220,26 @@ function activateLink($view, $link)
 
 }
 
-// Sanitize input
+// SANITIZE INPUT
 function sanitizeInput($data)
 {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
     return $data;
+}
+
+// GET CURRENT MONTH NAME
+function getCurrentMonthName()
+{
+    static $monthName = null;
+
+    if ($monthName !== null) {
+        return $monthName;
+    }
+
+    $month = date('m');
+    $monthName = date('F', mktime(0, 0, 0, $month, 10));
+
+    return $monthName;
 }

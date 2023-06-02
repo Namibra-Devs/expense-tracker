@@ -1,5 +1,9 @@
-<div>
+<!-- Expense view begins -->
+
+<div class="mb-3 border-bottom d-flex align-items-center justify-content-between">
     <h1>Add Expenses</h1>
+    <a href="./?view=expenses" class="btn btn-primary d-flex gap-2 align-items-center">
+    <i class="fa-solid fa-arrow-left"></i> <span>Back</span></a>
 </div>
 <div class="container">
     <div class="w-full" style="max-width: 700px; margin-inline: auto">
@@ -48,5 +52,10 @@
 
     </div>
 </div>
+<!-- Expense view ends -->
+
+<!-- Modal for alerts -->
 <div id="modal"></div>
+
+<!-- Script for addexpenses -->
 <script src="../src/js/addexpenses.js" type="module" ></script>
