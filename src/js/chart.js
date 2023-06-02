@@ -70,8 +70,8 @@ const populateChart = (labels, data) => {
 			},
 			scales: {
 				y: {
-					min: -1,
-					max: 1000,
+					min: 0,
+					max: 3000,
 				},
 			},
 		},

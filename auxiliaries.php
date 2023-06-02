@@ -194,13 +194,18 @@ function calculateMonthAverageExpenses($conn): float
 }
 
 
-function calculateTotalExpensesByMonth(PDO $conn): array
+function calculateTotalExpensesByMonth(PDO $conn, int $year): array
 {
     $totalExpensesByMonth = array_fill(1, 12, 0);
     $expenses = getExpenses($conn);
+
     foreach ($expenses as $expense) {
         $expenseDate = date('n', strtotime($expense['date']));
-        $totalExpensesByMonth[$expenseDate] += $expense['amount'];
+        $expenseYear = date('Y', strtotime($expense['date']));
+
+        if ($expenseYear == $year) {
+            $totalExpensesByMonth[$expenseDate] += $expense['amount'];
+        }
     }
 
     return $totalExpensesByMonth;
