@@ -3,11 +3,12 @@ require_once 'auxiliaries.php';
 require_once 'config.php';
 
 $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
+
 ?>
 
 
 <div class="mb-3 border-bottom d-flex align-items-center justify-content-between">
-    <h1>Expenses</h1>
+    <h1 class="text-bold" >Expenses</h1>
     <a href="?view=addexpense" class="btn btn-primary"> Add Expense</a>
 </div>
 <div class="container">
@@ -44,14 +45,14 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
             </form>
         </div>
     </div>
-    <table class="table table-hover">
-        <thead>
+    <table class="table table-light table-borderless table-responsive border rounded">
+        <thead class="table-dark">
             <tr>
-                <th scope="col">Amount</th>
-                <th scope="col">Date</th>
-                <th scope="col">Description</th>
-                <th scope="col">Category</th>
-                <th scope="col">Action</th>
+                <th class="p-3" scope="col">Amount</th>
+                <th class="p-3" scope="col">Date</th>
+                <th class="p-3" scope="col">Description</th>
+                <th class="p-3" scope="col">Category</th>
+                <th class="p-3" scope="col">Action</th>
             </tr>
         </thead>
         <tbody>
@@ -60,11 +61,11 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
                 foreach ($expenses as $expense) :
             ?>
                     <tr>
-                        <td>GHS <?= $expense['amount'] ?></td>
-                        <td> <?= $expense['date'] ?></td>
-                        <td> <?= $expense['description'] ?></td>
-                        <td> <?= $expense['category'] ?></td>
-                        <td>
+                        <td class="p-3">GHS <?= $expense['amount'] ?></td>
+                        <td class="p-3"> <?= $expense['date'] ?></td>
+                        <td class="p-3"> <?= $expense['description'] ?></td>
+                        <td class="p-3"> <?= $expense['category'] ?></td>
+                        <td class="p-3">
                             <a href="?view=edit&exp=<?= $expense['id'] ?>" class="btn btn-primary">Edit</a>
                             <button class="btn btn-primary delBtn" data-expenseId="<?= $expense['id'] ?>">Delete</button>
                         </td>
@@ -82,19 +83,41 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
             endif;
             ?>
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2">
+
+                    <!-- Total expense -->
+                    <div>
+                        <?php
+                        // CALCULATE ALL EXPENSES
+                        $total = 0;
+                        foreach ($expenses as $expense) {
+                            $total += $expense['amount'];
+                        }
+                        ?>
+                        <div class="alert alert-success" role="alert">
+                            Total Expenses: <span class="text-bold"> GHS <?= $total ?></span>
+                        </div>
+                    </div>
+                </td>
+                <td colspan="2" >
+                        <div class="alert alert-success" role="Alert">
+                        Total Expenses for <?= getCurrentMonthName();  ?> : GHS <span class="text-bold"> <?= getTotalExpensesForCurrentMonth($conn) ?></span>
+
+                        </div>
+                </td>
+                <td colspan="1">
+                    <div class="alert alert-success" role="alert">
+                        Average Expenses for <?= getCurrentMonthName();  ?> : GHS <span class="text-bold"> <?= calculateMonthAverageExpenses($conn) ?></span>
+                    </div>
+                </td>
+
+            </tr>
+
+        </tfoot>
     </table>
 
-    <!-- Total expense -->
-    <div>
-        <?php
-        // CALCULATE ALL EXPENSES
-        $total = 0;
-        foreach ($expenses as $expense) {
-            $total += $expense['amount'];
-        }
-        ?>
-        <h3> Total Expense: GHS <?= $total ?> </h3>
-    </div>
 
     <div id="modal"></div>
     <script type="module" src="../src/js/expenses.js"></script>

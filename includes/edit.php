@@ -9,11 +9,19 @@ if (!isset($_GET['exp'])) {
 }
 
 $expense = getExpense($conn, $_GET['exp']);
+
+if (!$expense || count($expense) === 0) {
+    header('Location: ./');
+    exit;
+}
 ?>
 
 <div class="mb-3 border-bottom d-flex align-items-center justify-content-between">
     <h1>Edit Expense</h1>
-    <a href="?view=expenses" class="btn btn-primary"> Back</a>
+    <a href="./?view=expenses" class="btn btn-primary d-flex gap-2 align-items-center">
+        <i class="fa-solid fa-arrow-left"></i> <span>Back</span>
+    </a>
+
 </div>
 
 <div class="container">

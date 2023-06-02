@@ -10,7 +10,7 @@
 	z-index: 1000;
 
 	.card{
-		animation: slide-in-right 0.50s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+		animation: slide-in-right 0.30s ease-in-out both;
 	}
 	.modal-box {
 		position: relative;
