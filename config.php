@@ -17,7 +17,11 @@ try {
     $conn = $connection;
 
 } catch (PDOException $e) {
-    setError($e->getMessage(), true);
+    http_response_code(500);
+    setError($e->getMessage(), [
+        'redirect' => 'error.php',
+        'exit' => true
+    ]); 
 }
 
 // CLOSE THE CONNECTION WHEN DONE WITH IT TO FREE UP RESOURCES

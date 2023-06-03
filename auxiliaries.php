@@ -15,10 +15,10 @@ function startSession(): void
 
 
 // SET ERROR MESSAGE IN SESSION
-function setError($message, $options = [
+function setError(string $message, array $options = [
     'redirect' => false,
     'exit' => false
-])
+]): void
 {
     startSession();
 
@@ -30,6 +30,8 @@ function setError($message, $options = [
         $options['redirect'] !== false
     ) {
         header("Location: ../{$options['redirect']}");
+    } else {
+        header("Location: ./error.php");
     }
 
     // CHECK IF EXIT IS SET AND IF IT IS NOT FALSE
@@ -38,11 +40,14 @@ function setError($message, $options = [
     }
 }
 
+
+
+
 // SET SUCCESS MESSAGE IN SESSION
-function setSuccess($message, $options = [
+function setSuccess(string $message, array $options = [
     'redirect' => null,
     'exit' => false
-])
+]): void
 {
     startSession();
 
@@ -54,6 +59,7 @@ function setSuccess($message, $options = [
         exit;
     }
 }
+
 
 
 // FUNCTION TO READ ERROR MESSAGE FROM SESSION

@@ -168,6 +168,14 @@ if (isset($_GET['sort_by']) && isset($_GET['sort-order'])) {
 // SHOW  SUCCESS MESSAGE
 if (isset($_SESSION['success'])) :
 ?>
+    <!-- 
+    PLAY SUCCESS SOUND WHEN SUCCESS MESSAGE IS SET
+    just a little fun 😁🤣
+     -->
+    <script>
+        const audio = new Audio('../success.mp3');
+        audio.play();
+    </script>
     <div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 mt-4 end-0 mx-4 " role="alert" aria-live="assertive" aria-atomic="true">
         <div class="d-flex">
             <div class="toast-body">
