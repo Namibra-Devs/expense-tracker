@@ -1,6 +1,9 @@
 <?php
+/**
+ * THIS FILE HANDLES THE DELETE EXPENSE PROCESS
+ */
+
 session_start();
-// header('Content-Type: application/json');
 
 require_once '../auxiliaries.php';
 require_once '../config.php';
@@ -33,9 +36,5 @@ if (
     }
 } else {
     http_response_code(405);
-    echo json_encode([
-        'status' => 'error',
-        'message' => 'Method not allowed'
-    ]);
-    exit;
+    setError('Method not allowed', true);
 }

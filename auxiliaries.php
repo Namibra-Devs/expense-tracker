@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * THIS FILE CONTAINS ALL THE AUXILIARY FUNCTIONS
+ * IT IS REQUIRED IN ALL THE PROCESS FILES AND OTHER IMPORTANT FILES
+ */
 
 // START SESSION IF NOT STARTED
 function startSession(): void
@@ -10,38 +14,40 @@ function startSession(): void
 }
 
 
-// FUNCTION TO REDIRECT TO ERROR PAGE ON SYSTEM ERROR
-function systemError(string $message): void
-{
-    $_SESSION['error'] = $message;
-    http_response_code(500);
-    header('Location: error.php');
-}
-
 // SET ERROR MESSAGE IN SESSION
-function setError($message, $options = [
+function setError(string $message, array $options = [
     'redirect' => false,
     'exit' => false
-])
+]): void
 {
     startSession();
 
-    $_SESSION['error'] = $message;
+    $_SESSION['error'] = $message; // SET THE ERROR MESSAGE IN SESSION
 
-    if (['redirect'] !== false) {
+    // CHECK IF REDIRECT IS SET AND IF IT IS NOT FALSE
+    if (
+        isset($options['redirect']) &&
+        $options['redirect'] !== false
+    ) {
         header("Location: ../{$options['redirect']}");
+    } else {
+        header("Location: ./error.php");
     }
 
+    // CHECK IF EXIT IS SET AND IF IT IS NOT FALSE
     if ($options = ['exit']) {
         exit;
     }
 }
 
+
+
+
 // SET SUCCESS MESSAGE IN SESSION
-function setSuccess($message, $options = [
+function setSuccess(string $message, array $options = [
     'redirect' => null,
     'exit' => false
-])
+]): void
 {
     startSession();
 
@@ -53,6 +59,7 @@ function setSuccess($message, $options = [
         exit;
     }
 }
+
 
 
 // FUNCTION TO READ ERROR MESSAGE FROM SESSION
@@ -96,8 +103,12 @@ function getExpenses(PDO $conn, array $options = [
 }
 
 
-
-// GET ONE EXPENSE
+/**
+ * FUNCTION TO GET USER'S EXPENSES FROM DATABASE
+ * @param PDO $conn DATABASE CONNECTION 
+ * @param int $id USER ID
+ * @return array|false ARRAY OF EXPENSE OR FALSE IF NOT FOUND
+ */
 function getExpense(PDO $conn, int $id): array | false
 {
 
@@ -124,7 +135,14 @@ function deleteExpense(PDO $conn, int $id): bool
     return $stmt->execute([$id]);
 }
 
-// CREATE EXPENSE
+
+/**
+ * FUNCTION TO CREATE A NEW EXPENSE
+ * 
+ * @param PDO $conn DATABASE CONNECTION
+ * @param array $expense ARRAY OF EXPENSE DETAILS
+ * @return bool `TRUE` IF SUCCESSFUL OR `FALSE` IF NOT
+ */
 function createExpense(PDO $conn, array $expense): bool
 {
     $createExpense = "INSERT INTO expenses (amount, date, description, category) VALUES (?, ?, ?, ?)";
@@ -132,7 +150,14 @@ function createExpense(PDO $conn, array $expense): bool
     return $stmt->execute($expense);
 }
 
-// UPDATE EXPENSE
+
+/**
+ * FUNCTION TO UPDATE AN EXPENSE
+ * 
+ * @param PDO $conn DATABASE CONNECTION
+ * @param array $expense ARRAY OF EXPENSE DETAILS
+ * @return bool `TRUE` IF SUCCESSFUL OR `FALSE` IF NOT
+ */
 function updateExpense(PDO $conn, array $expense): bool
 {
     $updateExpense = "UPDATE expenses SET amount = ?, date = ?, description = ?, category = ? WHERE id = ?";
@@ -140,7 +165,13 @@ function updateExpense(PDO $conn, array $expense): bool
     return $stmt->execute($expense);
 }
 
-// GET TOTAL EXPENSES FOR CURRENT MONTH
+
+/**
+ * FUNCTION TO GET THE TOTAL EXPENSES FOR THE CURRENT MONTH
+ * 
+ * @param PDO $conn DATABASE CONNECTION
+ * @return float TOTAL EXPENSES FOR THE CURRENT MONTH
+ */
 function getTotalExpensesForCurrentMonth($conn)
 {
 
@@ -158,6 +189,12 @@ function getTotalExpensesForCurrentMonth($conn)
     return $totalExpenses;
 }
 
+/**
+ * FUNCTION TO GET THE TOTAL EXPENSES FOR THE CURRENT MONTH
+ * 
+ * @param PDO $conn DATABASE CONNECTION
+ * @return float TOTAL EXPENSES FOR THE CURRENT MONTH
+ */
 function calculateAllExpenses(PDO $conn): float
 {
 
@@ -173,13 +210,16 @@ function calculateAllExpenses(PDO $conn): float
 }
 
 
+
+
+/**
+ * FUNCTION TO GET THE TOTAL EXPENSES FOR THE CURRENT MONTH
+ * 
+ * @param PDO $conn DATABASE CONNECTION
+ * @return float TOTAL EXPENSES FOR THE CURRENT MONTH
+ */
 function calculateMonthAverageExpenses($conn): float
 {
-    static $memoizedResult = null;
-
-    if ($memoizedResult !== null) {
-        return $memoizedResult;
-    }
 
     $totalAmount = 0;
     $totalCount = 0;
@@ -201,12 +241,18 @@ function calculateMonthAverageExpenses($conn): float
         $avgExpenses = $totalAmount / $totalCount;
     }
 
-    $memoizedResult = $avgExpenses;
-
     return $avgExpenses;
 }
 
 
+
+
+/**
+ * FUNCTION TO GET THE TOTAL EXPENSES FOR THE CURRENT MONTH
+ * 
+ * @param PDO $conn DATABASE CONNECTION
+ * @return float TOTAL EXPENSES FOR THE CURRENT MONTH
+ */
 function calculateTotalExpensesByMonth(PDO $conn, int $year): array
 {
     $totalExpensesByMonth = array_fill(1, 12, 0);
@@ -224,6 +270,16 @@ function calculateTotalExpensesByMonth(PDO $conn, int $year): array
     return $totalExpensesByMonth;
 }
 
+
+
+
+
+/**
+ * FUNCTION TO GET THE TOTAL EXPENSES FOR THE CURRENT MONTH
+ * 
+ * @param PDO $conn DATABASE CONNECTION
+ * @return float TOTAL EXPENSES FOR THE CURRENT MONTH
+ */
 function getTotalExpensesForCurrentYear(PDO $conn): float
 {
     static $memoizedResult = null;
@@ -254,7 +310,15 @@ function getTotalExpensesForCurrentYear(PDO $conn): float
     return $totalAmount;
 }
 
-// ACTIVATE LINK IN SIDEBAR
+
+
+
+/**
+ * FUNCTION TO ACTIVATE THE CURRENT LINK
+ * 
+ * @param string $view CURRENT VIEW
+ * @param string $link LINK TO ACTIVATE
+ */
 function activateLink($view, $link)
 {
     if ($view === $link) {
@@ -264,45 +328,18 @@ function activateLink($view, $link)
     }
 }
 
-// SANITIZE INPUT
+
+
+/**
+ * FUNCTION TO SANITIZE INPUTS
+ * 
+ * @param string $data INPUT TO SANITIZE
+ * @return string SANITIZED INPUT
+ */
 function sanitizeInput($data)
 {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
     return $data;
-}
-
-// GET CURRENT MONTH NAME
-function getCurrentMonthName()
-{
-    static $monthName = null;
-
-    if ($monthName !== null) {
-        return $monthName;
-    }
-
-    $month = date('m');
-    $monthName = date('F', mktime(0, 0, 0, $month, 10));
-
-    return $monthName;
-}
-
-
-// GET ALL MONTHS OF THE YEAR
-function getAllMonths()
-{
-    static $months = null;
-
-    if ($months !== null) {
-        return $months;
-    }
-
-    $months = [];
-
-    for ($i = 1; $i <= 12; $i++) {
-        $months[$i] = date('F', mktime(0, 0, 0, $i, 10));
-    }
-
-    return $months;
 }

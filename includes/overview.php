@@ -1,7 +1,9 @@
-<?php
-require_once 'config.php';
+<!-- 
+    THIS FILE CONTAINS THE OVERVIEW VIEW
+    IT DISPLAYS THE TOTAL EXPENSES, AVERAGE EXPENSES, TOTAL EXPENSES FOR THE CURRENT MONTH AND YEAR
+ -->
 
-?>
+ <!-- OVERVIEW BEGINS -->
 <div class="mb-3 border-bottom d-flex align-items-center justify-content-between">
     <h1 class="text-bold">Overview</h1>
     <!-- <a href="?view=addexpense" class="btn btn-primary"> Add Expense</a> -->
@@ -20,6 +22,12 @@ require_once 'config.php';
             </div>
         </div>
         <div class="col-12 w-full" style="height: 500px;">
+
+            <!-- 
+                THE CHART IS RENDERED IN A CANVAS ELEMENT
+                THE CHART.JS LIBRARY IS USED TO RENDER THE CHART
+                THE CHART.JS LIBRARY IS INCLUDED IN THE HEADER
+             -->
             <canvas id="chart"></canvas>
         </div>
     </div>
@@ -48,5 +56,9 @@ require_once 'config.php';
         </div>
     </div>
 </section>
+
+<!-- OVERVIEW ENDS -->
+
+<!-- SCRIPTS FOR OVERVIEW  -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="../src/js/chart.js"></script>
