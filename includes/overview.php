@@ -34,14 +34,14 @@ require_once 'config.php';
         </div>
         <div class="col-3 bg-light rounded-3 p-3 border">
             <div>
-                <h2 class="fs-5 m-0">Total Expenses </h2>
+                <h2 class="fs-5 m-0">This Month </h2>
                 <small><?= date('F') ?></small>
                 <h3 class="m-0 fs-2 text-bold">GHS <?= number_format(getTotalExpensesForCurrentMonth($conn), 2, '.', '') ?></h3>
             </div>
         </div>
         <div class="col-3 p-3 rounded-3 bg-white border">
             <div>
-                <h2 class="fs-5 m-0">Total Expenses </h2>
+                <h2 class="fs-5 m-0">This Year </h2>
                 <small><?= date('Y') ?></small>
                 <h3 class="m-0 fs-2 text-bold">GHS <?= number_format(getTotalExpensesForCurrentYear($conn), 2, '.', '') ?></h3>
             </div>

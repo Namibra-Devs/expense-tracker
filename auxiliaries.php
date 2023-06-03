@@ -24,15 +24,15 @@ function setError($message, $options = [
     'exit' => false
 ])
 {
-    startSession(); 
+    startSession();
 
-    $_SESSION['error'] = $message ;
-    
-    if(['redirect'] !== false) {
+    $_SESSION['error'] = $message;
+
+    if (['redirect'] !== false) {
         header("Location: ../{$options['redirect']}");
     }
 
-    if ($options =['exit']) {
+    if ($options = ['exit']) {
         exit;
     }
 }
@@ -44,12 +44,12 @@ function setSuccess($message, $options = [
 ])
 {
     startSession();
-    
+
     $_SESSION['success'] = $message;
     if ($options['redirect'] !== null) {
         header("Location: ../{$options['redirect']}");
     }
-    if($options['exit']) {
+    if ($options['exit']) {
         exit;
     }
 }
@@ -65,19 +65,31 @@ function readError(): string
 }
 
 /**
-* FUNCTION TO GET USER'S EXPENSES FROM DATABASE
-* 
-* @param PDO $conn DATABASE CONNECTION
-* @param int $id USER ID
-* @return array ARRAY OF EXPENSES
-*/
-function getExpenses(PDO $conn, bool $refresh = false): array
+ * FUNCTION TO GET USER'S EXPENSES FROM DATABASE
+ * 
+ * @param PDO $conn DATABASE CONNECTION
+ * @param int $id USER ID
+ * @return array ARRAY OF EXPENSES
+ */
+function getExpenses(PDO $conn, array $options = [
+    'sort' => 'date', 
+    'order' => 'DESC',
+    'filter_year_month' => null
+])
 {
-
-        $getAllExpenses = "SELECT * FROM expenses";
-        $stmt = $conn->prepare($getAllExpenses);
-        $stmt->execute(/*[$id] */);
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // SORT BY DATE 
+    if(isset($options['filter_year_month'])) {
+        $getAllExpenses = "SELECT * FROM expenses WHERE DATE_FORMAT(date, '%Y-%m') = ? ORDER BY {$options['sort']} {$options['order']}"; 
+    } else {
+        $getAllExpenses = "SELECT * FROM expenses ORDER BY {$options['sort']} {$options['order']}";
+    }
+    $stmt = $conn->prepare($getAllExpenses);
+    if(isset($options['filter_year_month'])) {
+        $stmt->execute([$options['filter_year_month']]);
+    } else {
+        $stmt->execute();
+    }
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 
     return $result;
@@ -96,6 +108,7 @@ function getExpense(PDO $conn, int $id): array | false
 
     return $result;
 }
+
 
 /**
  * FUNCTION TO GET USER'S EXPENSES FROM DATABASE
@@ -147,7 +160,7 @@ function getTotalExpensesForCurrentMonth($conn)
 
 function calculateAllExpenses(PDO $conn): float
 {
- 
+
     $totalAmount = 0;
 
     $expenses = getExpenses($conn);
@@ -173,7 +186,7 @@ function calculateMonthAverageExpenses($conn): float
     $avgExpenses = 0;
 
     $currentMonth = date('Y-m');
-    
+
     $expenses = getExpenses($conn);
     foreach ($expenses as $expense) {
         $expenseDate = date('Y-m', strtotime($expense['date']));
@@ -224,7 +237,7 @@ function getTotalExpensesForCurrentYear(PDO $conn): float
     $avgExpenses = 0;
 
     $currentYear = date('Y');
-    
+
     $expenses = getExpenses($conn);
     foreach ($expenses as $expense) {
         $expenseDate = date('Y', strtotime($expense['date']));
@@ -249,7 +262,6 @@ function activateLink($view, $link)
     } else {
         echo 'text-white';
     }
-
 }
 
 // SANITIZE INPUT
@@ -274,4 +286,23 @@ function getCurrentMonthName()
     $monthName = date('F', mktime(0, 0, 0, $month, 10));
 
     return $monthName;
+}
+
+
+// GET ALL MONTHS OF THE YEAR
+function getAllMonths()
+{
+    static $months = null;
+
+    if ($months !== null) {
+        return $months;
+    }
+
+    $months = [];
+
+    for ($i = 1; $i <= 12; $i++) {
+        $months[$i] = date('F', mktime(0, 0, 0, $i, 10));
+    }
+
+    return $months;
 }

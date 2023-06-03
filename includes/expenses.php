@@ -1,51 +1,91 @@
 <?php
-require_once 'auxiliaries.php';
-require_once 'config.php';
 
-$expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
+if (isset($_GET['sort_by']) && isset($_GET['sort-order'])) {
+    $sort_by = $_GET['sort_by'];
+    $sort_order = $_GET['sort-order'];
+    if (!empty($_GET['filter_year_month'])) {
+        $filter_year_month = $_GET['filter_year_month'];
+        $expenses = getExpenses($conn, [
+            'sort' => $sort_by,
+            'order' => $sort_order,
+            'filter_year_month' => $filter_year_month
+        ]);
+        // echo "<pre>";
+        // print_r($expenses);
+        // echo "</pre>";
+        // exit;
+    } else {
+        $expenses = getExpenses($conn, [
+            'sort' => $sort_by,
+            'order' => $sort_order
+        ]);
+    }
+} else {
+    $expenses = getExpenses($conn);
+}
 
 ?>
 
 
 <div class="mb-3 border-bottom d-flex align-items-center justify-content-between">
-    <h1 class="text-bold" >Expenses</h1>
-    <a href="?view=addexpense" class="btn btn-primary"> Add Expense</a>
+    <h1 class="text-bold">Expenses</h1>
+    <a href="?view=addexpense" class="btn btn-primary"><i class="fas fa-plus"></i> Add Expense</a>
 </div>
 <div class="container">
     <div class="row mb-3">
         <div class="col-12">
             <form class="row gy-2 gx-3 align-items-center justify-content-between w-100 mb-4">
-                <div class="col-auto d-flex gap-4">
-                    <div class="col-auto">
-                        <label class="visually-hidden" for="min-amount">Minimum Amount</label>
-                        <input type="text" class="form-control" id="min-amount" placeholder="Minimum Amount">
+                <input type="hidden" name="view" value="expenses">
+                <div class="col-auto d-flex align-items-center gap-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Order</span>
+                        <select name="sort-order" class=" form-select " id="sort-order">
+                            <option value="ASC" <?= isset($_GET['sort-order']) && $_GET['sort-order'] == 'ASC' ? 'selected' : ''?> >Ascending</option>
+                            <option value="DESC"  <?= isset($_GET['sort-order']) && $_GET['sort-order'] == 'DESC' ? 'selected' : ''; ?>>Descending</option>
+                        </select>
+
                     </div>
-                    <div class="col-auto">
-                        <label class="visually-hidden" for="max-amount">Max Amount</label>
-                        <input type="text" class="form-control" id="max-amount" placeholder="Maximum Amount">
-                    </div>
-                    <div class="col-auto">
-                        <label class="visually-hidden" for="category">Category</label>
-                        <input type="text" class="form-control" id="category" placeholder="Category">
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="input-group">
+                        <span class="input-group-text">By</span>
+                        <select class="form-select" aria-label="Default select example" id="sort_by" name="sort_by" required>
+                            <option 
+                                value="amount" 
+                                <?= isset($_GET['sort_by']) && $_GET['sort_by']=='amount' ? 'selected' : '' ?>>
+                                Amount</option>
+
+                            <option 
+                                value="date" 
+                                <?= isset($_GET['sort_by']) && $_GET['sort_by']=='date' ? 'selected' : '' ?>>
+                                Date</option>
+
+                            <option 
+                                value="category" 
+                                <?= isset($_GET['sort_by']) && $_GET['sort_by']=='category' ? 'selected' : '' ?> >
+                                Category</option>
+                                
+                        </select>
                     </div>
 
-                </div>
-                <div class="col-auto d-flex align-items-center gap-3 mx-4 ">
-                    <label class="form-label" for="sort-order">
-                        Sort
-                    </label>
-                    <select name="sort-order" class=" form-select " id="sort-order">
-                        <option value="asc">Ascending</option>
-                        <option value="desc">Descending</option>
-                    </select>
+                    <div class="input-group">
+                        <span class="input-group-text">Filter</span>
+                        <input 
+                            type="month" 
+                            class="form-control" 
+                            name="filter_year_month" 
+                            id="filter_year_month"
+                            value="<?= isset($_GET['filter_year_month']) ? $_GET['filter_year_month'] : '' ?>">
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary">Submit</button>
                 </div>
             </form>
         </div>
     </div>
+    <div>
+        <!-- Filter  -->
+    </div>
     <table class="table table-light table-borderless table-responsive border rounded">
+        <caption class="caption-top">List of all Expenses </caption>
         <thead class="table-primary">
             <tr>
                 <th class="p-3" scope="col">Amount</th>
@@ -62,7 +102,7 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
             ?>
                     <tr>
                         <td class="p-3">GHS <?= $expense['amount'] ?></td>
-                        <td class="p-3"> <?= $expense['date'] ?></td>
+                        <td class="p-3"> <?= date('d M Y', strtotime($expense['date'])) ?></td>
                         <td class="p-3"> <?= $expense['description'] ?></td>
                         <td class="p-3"> <?= $expense['category'] ?></td>
                         <td class="p-3">
@@ -75,7 +115,10 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
             else :
                 ?>
                 <tr>
-                    <td colspan="5" class="text-center text-secondary p-3">No expenses found
+                    <td colspan="5" class="text-center text-secondary p-3">No expenses found 
+                        <?= isset($_GET['filter_year_month']) ? 'for ' . 
+                        date('F Y', strtotime($_GET['filter_year_month']))
+                        : '' ?>
                         <a href="?view=addexpense"> Add Expense</a>
                     </td>
                 </tr>
@@ -89,9 +132,17 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
 
                     <!-- Total expense -->
                     <div>
-                        <div >
-                            Total Expenses: <span class="text-bold"> GHS <?= number_format(calculateAllExpenses($conn),2) ?></span>
-                        </div>
+                        <small class="text-muted">
+                            Total Expenses: <span class="text-bold"> GHS
+                                <?php
+                                $totalExpenses = 0;
+                                foreach ($expenses as $expense) {
+                                    $totalExpenses += $expense['amount'];
+                                }
+                                echo number_format($totalExpenses, 2, '.', '');
+                                ?>
+                            </span>
+                        </small>
                     </div>
                 </td>
 

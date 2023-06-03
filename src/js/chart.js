@@ -54,7 +54,7 @@ const populateChart = (labels, data) => {
 			labels: labels,
 			datasets: [
 				{
-					label: "Student Average Marks",
+					label: "Monthly Expenses",
 					backgroundColor: "#007bff",
 					borderColor: "#007bff",
 					pointBackgroundColor: "#dc3545",
