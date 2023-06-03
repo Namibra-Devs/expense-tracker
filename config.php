@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * THIS FILE CONTAINS ALL DATABASE CONFIGURATIONS
+ */
+
 require_once 'auxiliaries.php';
 
 $server = 'localhost';
@@ -13,10 +17,8 @@ try {
     $conn = $connection;
 
 } catch (PDOException $e) {
-    systemError('Connection failed: ' . $e->getMessage());
+    setError($e->getMessage(), true);
 }
 
-// close connection
+// CLOSE THE CONNECTION WHEN DONE WITH IT TO FREE UP RESOURCES
 $connection = null;
-
-

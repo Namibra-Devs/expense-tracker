@@ -1,4 +1,4 @@
-<!-- Expense view begins -->
+<!-- ADD EXPENSE VIEW BEGINS -->
 
 <div class="mb-3 border-bottom d-flex align-items-center justify-content-between">
     <h1>Add Expenses</h1>
@@ -52,10 +52,11 @@
 
     </div>
 </div>
-<!-- Expense view ends -->
 
-<!-- Modal for alerts -->
+<!-- MODAL FOR ALERTS. CALLED BY src/js/Alert.js -->
 <div id="modal"></div>
 
-<!-- Script for addexpenses -->
+<!-- SCRIPT FOR ADD EXPENSE VIEW -->
 <script src="../src/js/addexpenses.js" type="module" ></script>
+
+<!-- ADD EXPENSE VIEW ENDS -->

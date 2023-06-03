@@ -1,21 +1,31 @@
 <?php
 
-require_once 'auxiliaries.php';
-require_once 'config.php';
+// THIS IS THE EDIT EXPENSE VIEW
+// IT IS SIMILAR TO THE ADD EXPENSE VIEW
+// THE ONLY DIFFERENCE IS THAT IT HAS A FORM WITH THE CURRENT VALUES OF THE EXPENSE
+// AND A HIDDEN INPUT FIELD WITH THE ID OF THE EXPENSE TO BE EDITED
 
+// CHECK IF THE EXPENSE ID IS SET
 if (!isset($_GET['exp'])) {
+
+    // IF NOT SET, REDIRECT TO THE EXPENSES VIEW
     header('Location: ./');
-    exit;
+    exit; // STOP SCRIPT
 }
 
+// GET THE EXPENSE TO BE EDITED
 $expense = getExpense($conn, $_GET['exp']);
 
+// CHECK IF THE EXPENSE EXISTS
 if (!$expense || count($expense) === 0) {
+
+    // IF NOT, REDIRECT TO THE EXPENSES VIEW
     header('Location: ./');
     exit;
 }
 ?>
 
+<!-- EDIT EXPENSE VIEW BEGINS -->
 <div class="mb-3 border-bottom d-flex align-items-center justify-content-between">
     <h1>Edit Expense</h1>
     <a href="./?view=expenses" class="btn btn-primary d-flex gap-2 align-items-center">
@@ -27,6 +37,13 @@ if (!$expense || count($expense) === 0) {
 <div class="container">
     <div class="row">
         <div class="col-12 col-md-6 mx-auto">
+            <!-- 
+                THE FORM HAS THE CURRENT VALUES OF THE EXPENSE AS THE VALUE OF THE INPUTS
+                THIS IS DONE BY CHECKING IF THE CURRENT VALUE IS EQUAL TO THE VALUE OF THE INPUT
+                IF IT IS, THEN THE SELECTED ATTRIBUTE IS ADDED TO THE OPTION
+             -->
+
+             <!-- FORM BEGINS -->
             <form action="./processes/edit.proc.php" method="POST">
                 <input type="hidden" name="id" value="<?= $_GET['exp'] ?>">
                 <div class="mb-3">
@@ -66,8 +83,17 @@ if (!$expense || count($expense) === 0) {
                 </div>
                 <button type="submit" name="edit" class="btn btn-primary w-100">Edit</button>
             </form>
+            
+            <!-- FORM ENDS -->
+
         </div>
     </div>
 </div>
+
+<!-- MODAL FOR ALERTS. CALLED BY src/js/Alert.js -->
 <div id="modal"></div>
+
+<!-- SCRIPT FOR EDIT EXPENSE VIEW -->
 <script src="../src/js/addexpenses.js" type="module"></script>
+
+<!-- EDIT EXPENSE VIEW ENDS -->

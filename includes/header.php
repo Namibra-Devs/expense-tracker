@@ -1,11 +1,13 @@
 <?php
-session_start();
+session_start(); 
 require_once 'auxiliaries.php';
 require_once 'config.php';
-$view = $_GET['view'] ?? 'overview';
+
+
+$view = $_GET['view'] ?? 'overview';  // GET THE VIEW FROM THE URL PARAMETER
 
 ?>
-
+<!-- HEADER BEGINS -->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -24,4 +26,7 @@ $view = $_GET['view'] ?? 'overview';
 
 <body>
     <div class="d-flex h-100 position-fixed top-0 end-0 w-100">
-        <?php require_once 'includes/sidebar.php' ?>
+        <!-- INCLUDE SIDEBAR ON ALL VIEWS  -->
+        <?php require_once 'includes/sidebar.php' ?> 
+
+<!-- HEADER ENDS -->
