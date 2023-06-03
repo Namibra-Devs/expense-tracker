@@ -9,7 +9,14 @@ $database = 'expense-tracker';
 
 // PDO Connection
 try {
-    $conn = new PDO("mysql:host=$server;dbname=$database;", $username, $password);
+    $connection = new PDO("mysql:host=$server;dbname=$database;", $username, $password);
+    $conn = $connection;
+
 } catch (PDOException $e) {
     systemError('Connection failed: ' . $e->getMessage());
 }
+
+// close connection
+$connection = null;
+
+
