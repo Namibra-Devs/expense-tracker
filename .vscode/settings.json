@@ -4,6 +4,7 @@
         "addexpenses",
         "autohide",
         "DELETEBTN",
-        "expenseid"
+        "expenseid",
+        "stnd"
     ]
 }

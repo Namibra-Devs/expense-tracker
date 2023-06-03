@@ -46,7 +46,7 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
         </div>
     </div>
     <table class="table table-light table-borderless table-responsive border rounded">
-        <thead class="table-dark">
+        <thead class="table-primary">
             <tr>
                 <th class="p-3" scope="col">Amount</th>
                 <th class="p-3" scope="col">Date</th>
@@ -85,31 +85,13 @@ $expenses = getExpenses($conn); // GET ALL EXPENSES FROM DATABASE
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="2">
+                <td colspan="5">
 
                     <!-- Total expense -->
                     <div>
-                        <?php
-                        // CALCULATE ALL EXPENSES
-                        $total = 0;
-                        foreach ($expenses as $expense) {
-                            $total += $expense['amount'];
-                        }
-                        ?>
-                        <div class="alert alert-success" role="alert">
-                            Total Expenses: <span class="text-bold"> GHS <?= $total ?></span>
+                        <div >
+                            Total Expenses: <span class="text-bold"> GHS <?= number_format(calculateAllExpenses($conn),2) ?></span>
                         </div>
-                    </div>
-                </td>
-                <td colspan="2" >
-                        <div class="alert alert-success" role="Alert">
-                        Total Expenses for <?= getCurrentMonthName();  ?> : GHS <span class="text-bold"> <?= getTotalExpensesForCurrentMonth($conn) ?></span>
-
-                        </div>
-                </td>
-                <td colspan="1">
-                    <div class="alert alert-success" role="alert">
-                        Average Expenses for <?= getCurrentMonthName();  ?> : GHS <span class="text-bold"> <?= calculateMonthAverageExpenses($conn) ?></span>
                     </div>
                 </td>
 
