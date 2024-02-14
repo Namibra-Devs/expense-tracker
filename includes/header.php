@@ -1,7 +1,9 @@
 <?php
-session_start(); 
+// session_start();
 require_once 'auxiliaries.php';
 require_once 'config.php';
+
+startSession();
 
 
 $view = $_GET['view'] ?? 'overview';  // GET THE VIEW FROM THE URL PARAMETER

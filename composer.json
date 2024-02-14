@@ -1,0 +1,17 @@
+{
+    "name": "benson/expense-tracker",
+    "autoload": {
+        "psr-4": {
+            "Benson\\ExpenseTracker\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Benson Osei Mensah",
+            "email": "kbenson643@gmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

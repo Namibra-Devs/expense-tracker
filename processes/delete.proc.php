@@ -1,4 +1,5 @@
 <?php
+global $conn;
 /**
  * THIS FILE HANDLES THE DELETE EXPENSE PROCESS
  */
@@ -13,13 +14,13 @@ $requestMethod = $_SERVER['REQUEST_METHOD'] === 'GET'; // CHECK IF REQUEST METHO
 
 if (
     $requestMethod && // IF REQUEST METHOD IS GET
-    ($referer !== null && str_contains($referer, 'http://localhost:8080/?view=expenses')) // AND REFERER IS FROM EXPENSES PAGE
+    ($referer !== null && str_contains($referer, 'http://localhost:8000/?view=expenses')) // AND REFERER IS FROM EXPENSES PAGE
 ) {
     $id = $_GET['id'] ?? null; // GET THE ID FROM THE QUERY PARAMS
 
     if ($id === null) {
         http_response_code(400);
-        setError('No id provided', true);
+        setError('No id provided', ["exit" => true]);
     }
 
     $result = deleteExpense($conn, $id); // DELETE THE EXPENSE
@@ -32,9 +33,9 @@ if (
         ]);
     } else {
         http_response_code(500);
-        setError('Something went wrong', true);
+        setError('Something went wrong', ['exit' => true]);
     }
 } else {
     http_response_code(405);
-    setError('Method not allowed', true);
+    setError('Method not allowed', ['exit' => true]);
 }

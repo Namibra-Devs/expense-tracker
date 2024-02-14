@@ -5,7 +5,7 @@ const getExpenses = async () => {
 
 	// If not cached, fetch the expenses data
 	const response = await fetch(
-		"http://localhost:8080/processes/expenses.proc.php"
+		"http://localhost:8000/processes/expenses.proc.php"
 	);
 	const expenses = await response.json();
 

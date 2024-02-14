@@ -1,4 +1,5 @@
 import Alert from './Alert.js'
+
 const {today,yesterday} = {
     today: document.querySelector('#pick-today'), // BUTTON TO PICK TODAY'S DATE
     yesterday: document.querySelector('#pick-yesterday'), // BUTTON TO PICK YESTERDAY'S DATE
@@ -11,8 +12,7 @@ const dateInput = document.querySelector('#date') // DATE INPUT
 const pickToday = (e) => {
     e.preventDefault()
     const today = new Date()
-    const todayString = today.toISOString().split('T')[0]
-    dateInput.value = todayString
+    dateInput.value = today.toISOString().split('T')[0]
 }
 
 // PICK YESTERDAY'S DATE
@@ -20,8 +20,7 @@ const pickYesterday = (e) => {
     e.preventDefault()
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
-    const yesterdayString = yesterday.toISOString().split('T')[0]
-    dateInput.value = yesterdayString
+    dateInput.value = yesterday.toISOString().split('T')[0]
 }
 
 // COUNT THE CHARACTERS IN THE DESCRIPTION INPUT

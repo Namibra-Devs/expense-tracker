@@ -22,19 +22,19 @@ if($isPost && isset($_POST['edit']) ) {
 
     // VALIDATE THE INPUTS
     if(empty($amount) || empty($date) || empty($description) || empty($category)) {
-        setError('Please fill in all fields', true);
+        setError('Please fill in all fields', ['exit' => true]);
     }
 
     if(!is_numeric($amount)) {
-        setError('Amount must be a number', true);
+        setError('Amount must be a number', ['exit' => true]);
     }
 
     if(strlen($description) > 15) {
-        setError('Description must be less than 15 characters', true);
+        setError('Description must be less than 15 characters', ['exit' => true]);
     }
 
     if($date > date('Y-m-d')) {
-        setError('Date cannot be in the future', true);
+        setError('Date cannot be in the future', ['exit' => true]);
     }
     // VALIDATION ENDS
 
@@ -54,7 +54,6 @@ if($isPost && isset($_POST['edit']) ) {
             'exit' => true
         ]);
     } else {
-        setError('Something went wrong', true);
+        setError('Something went wrong', ['exit' => true]);
     }
-
 }
