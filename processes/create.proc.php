@@ -1,4 +1,5 @@
 <?php
+global $conn;
 /**
  * THIS FILE CONTAINS THE CREATE EXPENSE PROCESS
  * THIS FILE IS INCLUDED IN THE ADD EXPENSE VIEW
@@ -11,33 +12,35 @@ require_once '../config.php';
 // CHECK IF REQUEST METHOD IS POST AND IF THE SUBMIT BUTTON WAS CLICKED
 if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
 
+	$sanitized = [];
     // LOOP THROUGH THE POST ARRAY PERFORMING VALIDATION AND SANITIZATION
     foreach ($_POST as $key => $value) {
-        if (empty($_POST[$key])) {
+        if (empty($value)) {
             if ($key == 'submit') {
                 continue;
             } else
-                setError('Please fill in all fields', true);
+                setError('Please fill in all fields', options: ['exit' => true]);
         }
         if ($key == 'amount') {
-            if (!is_numeric($_POST[$key])) {
-                setError('Amount must be a number', true);
+            if (!is_numeric($value)) {
+                setError('Amount must be a number', options: ['exit' => true]);
             }
         }
 
         if ($key == 'description') {
-            if (strlen($_POST[$key]) > 15) {
-                setError('Description must be less than 15 characters', true);
+            if (strlen($value) > 15) {
+                setError('Description must be less than 15 characters', options: ['exit' => true]);
             }
         }
 
         if ($key == 'date') {
-            if ($_POST[$key] > date('Y-m-d')) {
+            if ($value > date('Y-m-d')) {
                 setError('Date cannot be in the future', true);
             }
         }
 
-        sanitizeInput($_POST[$key]);
+		$sanitized[$key] = sanitizeInput($value);
+
     }
 
     // CREATE THE EXPENSE
@@ -58,7 +61,7 @@ if (isset($_POST['submit']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
         ]);
     } else {
 
-        // SET ERROR MESSAGE 
+        // SET ERROR MESSAGE
         setError('Something went wrong', true);
     }
 }
